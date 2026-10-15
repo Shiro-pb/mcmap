@@ -30,4 +30,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: mcmap-windows-x64
-        path: build/Release/mcmap.exe
+        path: |
+          build/mcmap.exe
+          build/Release/mcmap.exe
+        if-no-files-found: error
