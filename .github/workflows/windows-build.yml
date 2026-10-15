@@ -1,0 +1,33 @@
+name: Build Windows x64 Binary
+
+on:
+  workflow_dispatch: # Allows you to trigger the build manually
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Install vcpkg Dependencies
+      run: |
+        vcpkg install libpng:x64-windows zlib:x64-windows fmt:x64-windows spdlog:x64-windows
+
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
+
+    - name: Build Project
+      run: |
+        cd build
+        cmake --build . --config Release
+
+    - name: Upload Compiled Executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: mcmap-windows-x64
+        path: build/Release/mcmap.exe
